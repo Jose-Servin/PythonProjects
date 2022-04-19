@@ -55,24 +55,140 @@ If you wish to clean the non UTF-8 characters this might
 ## Reports 
 
 ### Report One: What region is most profitable? 
-Looking at this data, the simplest aggregating we can do is to group by region and examine the sum of profit. This 
+Looking at this data, the simplest aggregating we can do is to group by region and examine the avg of profit. This 
 will show us what region is most profitable allowing us to dive deeper into states, cities and finally customers. It 
 is the goal of every business to identify what customer maximizes profit.
 ```postgresql
 SELECT region, 
-	SUM(profit)::NUMERIC::money AS sum_of_profit  
+	AVG(profit)::NUMERIC::money AS Avg_Profit  
 FROM super_store 
 GROUP BY region
-ORDER BY SUM(profit) DESC
+ORDER BY AVG(profit) DESC; 
 ```
-Here we are selecting region and taking the sum of profit. Because we are aggregating we must `GROUP BY` region and 
-cast the `sum_of_profit` as `NUMERIC` and then `money`. This double casting is due to our profit column being a 
+Here we are selecting region and taking the avg of profit. Because we are aggregating we must `GROUP BY` region and 
+cast the `Avg_Profit` as `NUMERIC` and then `money`. This double casting is due to our profit column being a 
 double-precision datatype. Postgres documentation over converting to money can be found 
 [here](https://www.postgresql.org/docs/current/datatype-money.html). 
 
-## Report two
-Report two will provide two key pieces of information.
-1. What is our top 3 states in the West that are most profitable. 
-2. From the top 3 states, what is our top 2 cities that are most profitable. 
 
-Such that in the end we will have our top 6 states from our top 3 cities based on profitability. 
+### Report Two: In what State do you sell the most? based on Volume 
+
+To see where you sell the most we can use a simple `count` aggregate function.
+```postgresql
+SELECT state, 
+COUNT (DISTINCT order_id) as Volume
+FROM super_store
+GROUP BY state
+ORDER BY Volume DESC;
+```
+If you would like to verify this information by getting a sum of all unique order, we must recognize that `order_id`'s
+are not unique values therefore duplicate rows exist. To eliminate duplicates and only count unique orders we can use a 
+combination of `COUNT` and `DISTINCT`:
+```postgresql
+SELECT 	
+	COUNT(*) 
+FROM (SELECT DISTINCT order_id FROM super_store) AS unique_data;
+```
+From this query we see there are 5009 unique order_id's which matches the value returned by the simple aggregate 
+function. 
+
+### Report Three
+Report three will provide two key pieces of information.
+1. What is our most profitable State? 
+```postgresql
+SELECT region,
+	state,
+	AVG(profit)::NUMERIC::money AS Avg_Profit
+FROM super_store 
+GROUP BY region, state
+ORDER BY AVG(profit) DESC;
+```
+2. What are our top 10% most profitable City - State combinations?
+
+* First we must determine how many unique City - State combinations exist:
+```postgresql
+SELECT COUNT(*) FROM (SELECT 
+DISTINCT city, state FROM super_store)
+AS unique_city_states;
+```
+
+* Next we limit the rank to 10% of this value:
+
+```postgresql
+SELECT * FROM (
+	SELECT
+		*,
+		RANK() OVER ( ORDER BY Avg_Profit DESC) AS rank
+		FROM
+	(
+
+		SELECT
+			region,
+			city,
+			state,
+			AVG(profit)::NUMERIC::money AS Avg_Profit
+		FROM super_store
+		GROUP BY region, city, state
+		ORDER BY Avg_Profit DESC
+
+	) AS rank_table
+) AS final_data
+
+WHERE rank <= 60;
+```
+### Report 4
+Report four will show us what product is most profitable in each state. 
+```postgresql
+SELECT 
+	state, 
+	category,
+	sub_category,
+	AVG(profit)::NUMERIC::money AS Avg_Profit
+FROM super_store
+GROUP BY state, 
+	category,
+	sub_category
+ORDER BY AVG(profit)::NUMERIC::money DESC
+```
+Now let's see what's the sum of profit for the category/sub-category groups:
+```postgresql
+SELECT	
+	category,
+	sub_category,
+	SUM(profit)::NUMERIC::money as Total_Profit
+FROM super_store
+GROUP BY category,
+	sub_category
+ORDER BY
+	SUM(profit)::NUMERIC::money DESC
+```
+Lastly, let's see a running sum of profit for the top category/sub_category group `Technology / Copiers`:
+```postgresql
+WITH MASTER_DATA AS (
+	SELECT 
+		state,
+		SUM(profit) as profit
+	FROM super_store
+	WHERE 
+		category = 'Technology' AND
+		sub_category = 'Copiers'
+	GROUP BY state
+)
+SELECT state, 
+	SUM(profit) OVER (ORDER BY state)::NUMERIC::money as Running_Profit_Sum
+FROM MASTER_DATA;
+```
+## Project Routes
+Now that we've confirmed that both our queries run and that the data looks correct we will move on to the Python 
+part of the project. Here, there are two options we can take:
+1. We save the reports as `csv`'s or `.xlsx` files in our local machine and then use Python to automate the actions of 
+   grabbing those reports and emailing them out.
+2. We connect to the database and run the queries using Python and then save those reports in an email as attachments 
+   and send out a secure email using Gmail Developer Tools/API. 
+
+There are pros and cons to both options but for this project I am going to select option two. I am doing this in 
+order to challenge myself to use the Google API tools and to create a more structured automation program using Python. 
+
+## Project Structure 
+
+
