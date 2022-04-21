@@ -34,7 +34,7 @@ Feel free to copy and paste, take bits and modify.
 
 ## Project 1: PythonPostgreSQL 
 
-![Python and Postgres Image banner](python_postgres_a723c960e9.png)
+![Python and Postgres Image banner](Images/python_postgres_a723c960e9.png)
 
 ### What are we buiding? 
 1. A program that queries a database and sends out formatted emails to a list of recipients. 
