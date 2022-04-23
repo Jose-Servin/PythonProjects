@@ -252,3 +252,12 @@ if __name__ == "__main__":
     script_function()
 ```
 After confirming this works, I'll move on storing the results in a DataFrame. 
+
+# Resources and Citations
+* [Connecting to a PostgreSQL server](https://www.postgresqltutorial.com/postgresql-python/connect/)
+* [Psycopg cursor class](https://www.psycopg.org/docs/cursor.html) 
+* [Pandas read_sql function](https://pandas.pydata.org/docs/reference/api/pandas.read_sql.html)
+* [Gmail API Overview](https://developers.google.com/gmail/api/guides)
+* [Beginners guide to Gmail API](https://betterprogramming.pub/a-beginners-guide-to-the-google-gmail-api-and-its-documentation-c73495deff08)
+* [Gmail API code repo](https://github.com/banjo/gmail-api-guide/blob/master/gmail.py)
+* [Creating multiple sheets in an Excel document](https://pythoninoffice.com/save-multiple-sheets-to-one-excel-file-in-python/)
