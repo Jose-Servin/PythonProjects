@@ -1,6 +1,4 @@
-# PythonProjects 
-Howdy, I don't know what to write here but maybe one day I'll come up with an inspirational quote.
-
+# PythonProjects
 PythonProjects is a repo with the code of all my different python projects that focus on creating something that 
 can have real world value and or business value.
 
@@ -9,7 +7,7 @@ While learning how to code, there is a lot of emphasis on understanding the basi
 me who is self-taught. But after you finish the tutorials, after you've watched all
 the videos then what? 
 You hit a road block. This repo is for those who have reached a certain level and are now ready to create 
-and put into practice what you've learned. We won't be creating number guessing games or paper rock scissors scripts. That's BORING!
+and put into practice what you've learned. 
 
 Instead, let's focus and dive deep into creating projects that are fun and challenging.
 We are here to learn together and make mistakes together.
