@@ -32,6 +32,15 @@ class AmazonItemSearch(unittest.TestCase):
         self.assertIn(f"Amazon.com : {AmazonItemSearch.search_term}", driver.title)
         self.assertNotIn('No results found', driver.page_source)
 
+    def test_add_to_cart(self):
+        driver = self.driver
+        # FIND FIRST ITEM
+        first_item = driver.find_element(By.CLASS_NAME, 'a-section aok-relative s-image-fixed-height')
+        first_item.click()
+
+        cart_button = driver.find_element(By.ID, 'add-to-cart-button')
+        cart_button.click()
+
     def tearDown(self):
         self.driver.close()
 
