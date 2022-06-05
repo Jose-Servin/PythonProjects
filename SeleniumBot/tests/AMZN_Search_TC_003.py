@@ -40,15 +40,21 @@ class AmazonItemSearch(unittest.TestCase):
         first_item.click()
 
         # ADD ELEMENT TO CART
-        cart_button = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "add-to-cart-button")))
+        cart_button = WebDriverWait(driver, 15).until(EC.presence_of_element_located((By.ID, "add-to-cart-button")))
         cart_button.click()
 
         # SELECT NO PROTECTION PLAN
         # time.sleep(1) NOT NEEDED IF WE INCREASE WEBDRIVERWAIT TIME
-        no_coverage_button = WebDriverWait(driver, 15).until(EC.presence_of_element_located((By.XPATH, "/html/body/div[7]/div[3]/div[1]/div/div/div[2]/div[2]/div/div/div[3]/div/span[2]/span/input")))
+        time.sleep(1)
+        no_coverage_button = WebDriverWait(driver, 15).until(EC.presence_of_element_located((By.XPATH, '//*[@id="attachSiNoCoverage"]/span/input')))
         no_coverage_button.click()
 
         # ASSERT ACTIONS WERE PERFORMED
+        time.sleep(1)
+        cart_count_element = WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.ID, 'nav-cart-count')))
+        cart_count = '1'
+        message = f"The cart element shows {cart_count_element} but the cart count should be {cart_count}. "
+        self.assertEqual(cart_count_element.text, cart_count, message)
 
     def tearDown(self):
         self.driver.quit()
