@@ -1,9 +1,12 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 # THE KEYS CLASS PROVIDES KEYBOARD KEY VALUES
 from selenium.webdriver.common.keys import Keys
 import unittest
+import time
 
 
 class AmazonItemSearch(unittest.TestCase):
@@ -19,7 +22,8 @@ class AmazonItemSearch(unittest.TestCase):
         self.driver.maximize_window()
         self.driver.implicitly_wait(10)
 
-    def test_item_searching(self):
+    def test_add_to_cart(self):
+        # FOR EVERY TEST WE NEED TO NAVIGATE TO THE WEBPAGE
         driver = self.driver
         driver.get(AmazonItemSearch.base_url)
         self.assertIn('Amazon', driver.title)
@@ -29,20 +33,25 @@ class AmazonItemSearch(unittest.TestCase):
         search_box.send_keys(AmazonItemSearch.search_term)
         search_box.send_keys(Keys.ENTER)
 
-        self.assertIn(f"Amazon.com : {AmazonItemSearch.search_term}", driver.title)
-        self.assertNotIn('No results found', driver.page_source)
-
-    def test_add_to_cart(self):
-        driver = self.driver
         # FIND FIRST ITEM
-        first_item = driver.find_element(By.CLASS_NAME, 'a-section aok-relative s-image-fixed-height')
+        # time.sleep(2) NOT NEEDED
+        first_item = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.PARTIAL_LINK_TEXT, 'Logitech K845 Mechanical')))
         first_item.click()
 
-        cart_button = driver.find_element(By.ID, 'add-to-cart-button')
+        # ADD ELEMENT TO CART
+        cart_button = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "add-to-cart-button")))
         cart_button.click()
 
+        # SELECT NO PROTECTION PLAN
+        # time.sleep(1) NOT NEEDED IF WE INCREASE WEBDRIVERWAIT TIME
+        no_coverage_button = WebDriverWait(driver, 15).until(EC.presence_of_element_located((By.XPATH, "/html/body/div[7]/div[3]/div[1]/div/div/div[2]/div[2]/div/div/div[3]/div/span[2]/span/input")))
+        no_coverage_button.click()
+
+        # ASSERT ACTIONS WERE PERFORMED
+
     def tearDown(self):
-        self.driver.close()
+        self.driver.quit()
 
 
 if __name__ == "__main__":
