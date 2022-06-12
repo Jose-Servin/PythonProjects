@@ -130,6 +130,42 @@ class AmazonShopping(unittest.TestCase):
         error_message = f"Empty cart message shows {empty_cart_message} instead of {expected_text}"
         self.assertEqual(empty_cart_message, expected_text, error_message)
 
+    def test_05_checkout(self):
+        """Find and add product to cart as well as proceed to checkout. """
+        driver = self.driver
+        driver.get(AmazonShopping.base_url)
+        self.assertIn('Amazon', driver.title)
+
+        search_box = driver.find_element(By.ID, 'twotabsearchtextbox')
+        search_box.clear()
+        search_box.send_keys(AmazonShopping.search_term)
+        search_box.send_keys(Keys.ENTER)
+
+        # FIND FIRST ITEM
+        # time.sleep(2) NOT NEEDED
+        first_item = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.PARTIAL_LINK_TEXT, 'Logitech K845 Mechanical')))
+        first_item.click()
+
+        # ADD ELEMENT TO CART
+        cart_button = WebDriverWait(driver, 15).until(EC.presence_of_element_located((By.ID, "add-to-cart-button")))
+        cart_button.click()
+
+        # SELECT NO PROTECTION PLAN
+        # time.sleep(1) NOT NEEDED IF WE INCREASE WEBDRIVERWAIT TIME
+        time.sleep(1)
+        no_coverage_button = WebDriverWait(driver, 15).until(
+            EC.presence_of_element_located((By.XPATH, '//*[@id="attachSiNoCoverage"]/span/input')))
+        no_coverage_button.click()
+
+        # CHECKOUT
+        time.sleep(1)
+        checkout_button = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '//*[@id="sc-buy-box-ptc-button"]/span/input')))
+        checkout_button.click()
+
+        # ASSERT WE ARE IN THE LOG-IN PAGE
+        self.assertIn('Amazon Sign-In', driver.title)
+
     def tearDown(self):
         self.driver.quit()
 
