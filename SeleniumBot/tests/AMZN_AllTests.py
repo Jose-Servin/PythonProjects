@@ -82,6 +82,50 @@ class AmazonShopping(unittest.TestCase):
         message = f"The cart element shows {cart_count_element} but the cart count should be {cart_count}. "
         self.assertEqual(cart_count_element.text, cart_count, message)
 
+    def test_04_delete_item(self):
+        """Add item to cart and then delete from cart """
+        driver = self.driver
+        driver.get(AmazonShopping.base_url)
+        self.assertIn('Amazon', driver.title)
+
+        search_box = driver.find_element(By.ID, 'twotabsearchtextbox')
+        search_box.clear()
+        search_box.send_keys(AmazonShopping.search_term)
+        search_box.send_keys(Keys.ENTER)
+
+        # FIND FIRST ITEM
+        # time.sleep(2) NOT NEEDED
+        first_item = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.PARTIAL_LINK_TEXT, 'Logitech K845 Mechanical')))
+        first_item.click()
+
+        # ADD ELEMENT TO CART
+        cart_button = WebDriverWait(driver, 15).until(EC.presence_of_element_located((By.ID, "add-to-cart-button")))
+        cart_button.click()
+
+        # SELECT NO PROTECTION PLAN
+        # time.sleep(1) NOT NEEDED IF WE INCREASE WEBDRIVERWAIT TIME
+        time.sleep(1)
+        no_coverage_button = WebDriverWait(driver, 15).until(
+            EC.presence_of_element_located((By.XPATH, '//*[@id="attachSiNoCoverage"]/span/input')))
+        no_coverage_button.click()
+
+        # NAVIGATE TO CART AFTER SELECTING ITEM
+        go_to_cart_button = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.LINK_TEXT, 'Go to Cart')))
+        go_to_cart_button.click()
+
+        delete_button = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH,'//*[@id="sc-item-C329d18a2-a34f-4499-b5c3-1b4667270615"]/div[4]/div/div[1]/div/div/div[2]/div[1]/span[2]/span/input')))
+        delete_button.click()
+
+        # ASSERT STATEMENTS
+        empty_cart_message = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, '//*[@id="sc-active-cart"]/div/div/div/h1')))
+        empty_cart_message = empty_cart_message.text
+        expected_text = 'Your Amazon Cart is empty.'
+        error_message = f"The expected text does not match what the website is showing...."
+        self.assertEqual(empty_cart_message, expected_text, error_message)
+
     def tearDown(self):
         self.driver.quit()
 
