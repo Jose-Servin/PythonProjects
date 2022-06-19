@@ -6,6 +6,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
 import unittest
 import time
+import HtmlTestRunner
 
 
 # NOTE
@@ -115,8 +116,9 @@ class AmazonShopping(unittest.TestCase):
             EC.presence_of_element_located((By.LINK_TEXT, 'Go to Cart')))
         go_to_cart_button.click()
 
-        time.sleep(1)
-        delete_button = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH,'/html/body/div[1]/div[4]/div[1]/div[3]/div/div[2]/div[4]/div/form/div[2]/div[3]/div[4]/div/div[1]/div/div/div[2]/div[1]/span[2]/span/input')))
+        time.sleep(2)  # added a longer wait time so the element can be found
+        delete_button = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH,
+                                                                                        '/html/body/div[1]/div[4]/div[1]/div[3]/div/div[2]/div[4]/div/form/div[2]/div[3]/div[4]/div/div[1]/div/div/div[2]/div[1]/span[2]/span/input')))
         delete_button.click()
 
         # ALLOW TIME FOR EMPTY CART MESSAGE TO SHOW UP
@@ -160,7 +162,8 @@ class AmazonShopping(unittest.TestCase):
 
         # CHECKOUT
         time.sleep(1)
-        checkout_button = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '//*[@id="sc-buy-box-ptc-button"]/span/input')))
+        checkout_button = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, '//*[@id="sc-buy-box-ptc-button"]/span/input')))
         checkout_button.click()
 
         # ASSERT WE ARE IN THE LOG-IN PAGE
@@ -171,4 +174,4 @@ class AmazonShopping(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    unittest.main()
+    unittest.main(testRunner=HtmlTestRunner.HTMLTestRunner(output='/Users/joseservin/PythonProjects/SeleniumBot/run_reports'))
