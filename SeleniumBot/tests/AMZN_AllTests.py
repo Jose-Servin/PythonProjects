@@ -61,9 +61,9 @@ class AmazonShopping(unittest.TestCase):
 
         # FIND FIRST ITEM
         # time.sleep(2) NOT NEEDED
-        first_item = WebDriverWait(driver, 10).until(
+        my_item = WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.PARTIAL_LINK_TEXT, 'Logitech K845 Mechanical')))
-        first_item.click()
+        my_item.click()
 
         # ADD ELEMENT TO CART
         cart_button = WebDriverWait(driver, 15).until(EC.presence_of_element_located((By.ID, "add-to-cart-button")))
@@ -96,9 +96,9 @@ class AmazonShopping(unittest.TestCase):
 
         # FIND FIRST ITEM
         # time.sleep(2) NOT NEEDED
-        first_item = WebDriverWait(driver, 10).until(
+        my_item = WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.PARTIAL_LINK_TEXT, 'Logitech K845 Mechanical')))
-        first_item.click()
+        my_item.click()
 
         # ADD ELEMENT TO CART
         cart_button = WebDriverWait(driver, 15).until(EC.presence_of_element_located((By.ID, "add-to-cart-button")))
@@ -145,9 +145,9 @@ class AmazonShopping(unittest.TestCase):
 
         # FIND FIRST ITEM
         # time.sleep(2) NOT NEEDED
-        first_item = WebDriverWait(driver, 10).until(
+        my_item = WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.PARTIAL_LINK_TEXT, 'Logitech K845 Mechanical')))
-        first_item.click()
+        my_item.click()
 
         # ADD ELEMENT TO CART
         cart_button = WebDriverWait(driver, 15).until(EC.presence_of_element_located((By.ID, "add-to-cart-button")))
@@ -174,4 +174,4 @@ class AmazonShopping(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    unittest.main(testRunner=HtmlTestRunner.HTMLTestRunner(output='/Users/joseservin/PythonProjects/SeleniumBot/run_reports'))
+    unittest.main(testRunner=HtmlTestRunner.HTMLTestRunner(output='/Users/joseservin/PythonProjects/SeleniumBot/reports'))
