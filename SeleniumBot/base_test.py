@@ -7,9 +7,9 @@ from selenium.webdriver.common.keys import Keys
 import unittest
 import time
 import HtmlTestRunner
-from SeleniumBot.resources.pages import BasePage, HomePage, SearchResultsPage, ProductDetail, SubCartPage, MainCartPage, SignInPage
-from SeleniumBot.resources.locators import Locators
-from SeleniumBot.resources.test_data import TestData
+from resources.pages import BasePage, HomePage, SearchResultsPage, ProductDetail, SubCartPage, MainCartPage, SignInPage
+from resources.locators import Locators
+from resources.test_data import TestData
 
 
 # --- BASE-TEST CLASS CONTAINS SETUP AND TEARDOWN METHODS ---
