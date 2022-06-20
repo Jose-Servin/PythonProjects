@@ -8,7 +8,7 @@ class Locators:
     # --- Home Page Locators ---
     SEARCH_BOX = (By.ID, 'twotabsearchtextbox')
 
-    # -- ITEM SEARCH PAGE --
+    # -- SEARCH RESULT PAGE --
     SEARCH_RESULT = (By.PARTIAL_LINK_TEXT, 'Logitech K845 Mechanical')
 
     # -- PRODUCT DETAIL PAGE --

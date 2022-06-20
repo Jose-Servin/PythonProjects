@@ -7,6 +7,8 @@ from selenium.webdriver.common.keys import Keys
 import unittest
 import time
 import HtmlTestRunner
+from test_data import TestData
+from locators import Locators
 
 
 class BasePage:
@@ -42,3 +44,69 @@ class BasePage:
         """Checks if web element passed is visible and return boolean value. """
         element = WebDriverWait(self.driver, 10).until(EC.visibility_of_element_located(by_locator))
         return bool(element)
+
+
+class HomePage(BasePage):
+    """Home page of Amazon """
+
+    def __init__(self, driver):
+        super().__init__(driver)  # THE __init__ arguments of our Parent Class
+        self.driver.get(TestData.BASE_URL)  # ARRIVING TO HOME PAGE
+
+    def search(self):
+        """Finding the search box element and using it. """
+        self.driver.find_element(Locators.SEARCH_BOX).clear()
+        self.enter_text(Locators.SEARCH_BOX, TestData.SEARCH_TERM)
+        self.driver.find_element(Locators.SEARCH_BOX).send_keys(Keys.ENTER)
+
+
+class SearchResultsPage(BasePage):
+    """Clicking on the item we want after arriving to Search Result page """
+
+    def __init__(self, driver):
+        super().__init__(driver)
+
+    def click_on_item(self):
+        self.click(Locators.SEARCH_RESULT)  # This 'click' method comes from the parent class.
+
+
+class ProductDetail(BasePage):
+    """Specific Logitech Page for item selected """
+
+    def __init__(self, driver):
+        super().__init__(driver)
+
+    def click_add_to_cart(self):
+        self.click(Locators.ADD_TO_CART_BUTTON)
+
+    def click_no_protection_plan(self):
+        self.click(Locators.NO_COVERAGE_BUTTON)
+
+
+class SubCartPage(BasePage):
+    """Sub-cart page navigation. """
+
+    def __init__(self, driver):
+        super().__init__(driver)
+
+    def click_go_to_cart(self):
+        self.click(Locators.GO_TO_CART_BUTTON)
+
+    def click_proceed_to_checkout(self):
+        self.click(Locators.CHECKOUT_BUTTON)
+
+
+class MainCartPage(BasePage):
+    def __init__(self, driver):
+        super().__init__(driver)
+
+    def delete_item_from_cart(self):
+        self.click(Locators.DELETE_ITEM_BUTTON)
+
+    def check_deleted_item(self):
+        self.assert_element_text(Locators.EMPTY_CART_MESSAGE, TestData.EXPECTED_EMPTY_CART_MESSAGE)
+
+
+class SignInPage(BasePage):
+    def __init__(self, driver):
+        super().__init__(driver)

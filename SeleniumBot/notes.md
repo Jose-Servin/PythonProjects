@@ -123,3 +123,7 @@ We create this `BaseClass` for two main reasons:
 1. All page classes that inherit from the `BaseClass` inherit these methods. 
 2. Any update or need to add more common methods will only have to happen to the `BaseClass`
 
+### Other Pages 
+
+To build the other pages classes, we need to name it following a convention that makes sense and again, look at the 
+actions performed on this page. These actions turn into methods. 
